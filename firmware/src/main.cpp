@@ -1,30 +1,37 @@
 #include <Arduino.h>
 
-const int trig_pin = 2;
-const int echo_pin = 32;
+#include "drivers/SonarSensor.h"
+#include "drivers/Display.h"
+#include "config/Pins.h"
 
-long duration;
-int distance;
+SonarSensor sensor1(TRIG_PIN, ECHO_PIN, MAX_DISTANCE); // init sonar using config (TODO: account for multiple sonars)
+Display display;
 
-void setup()
-{
-  Serial.begin(115200);
+bool prevState;
+bool currState;
 
-  // activates correlating pins on arduino board as input/output
-  pinMode(trig_pin, OUTPUT);
-  pinMode(echo_pin, INPUT);
+void setup() {
+  Serial.begin(115200);   // Serial for debugging
+  display.init();         // initialize TFT display
+
+  prevState = false;      // Assume no object detected at startup
 }
 
 void loop() {
-  digitalWrite(trig_pin, LOW);        // Resets the trig_pin
-  delayMicroseconds(2);               // Waits 2 microsenconds
-  digitalWrite(trig_pin, HIGH);       // Sets the trig_pin state to HIGH
-  delayMicroseconds(10);              // Waits 10 microseconds
-  digitalWrite(trig_pin, LOW);        // Sets the trig_pin state to LOW
-  duration = pulseIn(echo_pin, HIGH); // Reads the echoPin and assign it to the variable duration
-  distance = duration*0.034/2;        // Calculation of the distance in cm
-  
-  Serial.println(distance);
+  currState = sensor1.objectDetected();
+
+  // on state change of undetected to detected object
+  if (currState && !prevState) {
+    // fills the display with red to mark as used
+    display.markUsed(true);
+  }
+  // on state change of detected to undetected
+  else if (!currState && prevState) {
+    // fill the display with green to show availability
+    display.markUsed(false);
+  }
+
+  prevState = currState; // update for next iteration
 
   delay(100);
 }
