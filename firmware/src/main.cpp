@@ -7,31 +7,30 @@
 SonarSensor sensor1(TRIG_PIN, ECHO_PIN, MAX_DISTANCE); // init sonar using config (TODO: account for multiple sonars)
 Display display;
 
-bool prevState;
-bool currState;
-
 void setup() {
   Serial.begin(115200);   // Serial for debugging
   display.init();         // initialize TFT display
-
-  prevState = false;      // Assume no object detected at startup
 }
 
 void loop() {
-  currState = sensor1.objectDetected();
+  // check the sensor for state changes and update display accordingly
+  // handles transitions between occupied and available states
+  switch (sensor1.poll())
+  {
+    case SensorEvent::ON_OCCUPIED:
+      // mark the display red to indicate the slot is occupied
+      display.markOccupied(true);
+      break;
 
-  // on state change of undetected to detected object
-  if (currState && !prevState) {
-    // fills the display with red to mark as used
-    display.markUsed(true);
+    case SensorEvent::ON_AVAILABLE:
+      // mark the display green to indicate the slot is available
+      display.markOccupied(false);
+      break;
+    
+    default:
+      // do nothing if state remains the same
+      break;
   }
-  // on state change of detected to undetected
-  else if (!currState && prevState) {
-    // fill the display with green to show availability
-    display.markUsed(false);
-  }
-
-  prevState = currState; // update for next iteration
-
-  delay(100);
+  
+  delay(100);  // throttles the polling to reduce sensor/CPU stress   
 }

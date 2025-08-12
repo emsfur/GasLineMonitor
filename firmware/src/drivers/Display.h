@@ -9,12 +9,12 @@ class Display {
          * Sets up the TFT display and clears the screen.
          */
         void init();
-        
+
         /**
          * @brief Fills the display with a color to indicate usage.
          * Red means occupied, green means available.
          */
-        void markUsed(bool marked);
+        void markOccupied(bool occupied);
     private:
         TFT_eSPI tft;
 };
