@@ -12,12 +12,13 @@ Display display;
 
 void setup() {
   Serial.begin(115200);
-  display.init(); // Initialize TFT display
 
-  //  Initialize each sensor's NewPing instance using pins from SonarConfig.
   for (int i = 0; i < NUM_SONARS; i++) {
+    //  Initialize each sensor's NewPing instance using pins from SonarConfig
     sonars[i].init(sonarPins[i].trig_pin, sonarPins[i].echo_pin);
   }
+
+  display.init(NUM_SONARS); // Initialize TFT display and icon coordinates
 }
 
 void loop() {
@@ -26,18 +27,16 @@ void loop() {
 
     // Check the sensor for state changes and update display accordingly
     // Handles transitions between occupied and available states
-    // TODO: Method currently repaints the whole screen.
-    //   - Goal: show N sensors concurrently without overwriting each other.
     switch (sensor.poll())
     {
       case SensorEvent::ON_OCCUPIED:
         // Mark the display red to indicate the slot is occupied
-        display.markOccupied(true);
+        display.displaySlotStatus(i, true);
         break;
 
       case SensorEvent::ON_AVAILABLE:
         // Mark the display green to indicate the slot is available
-        display.markOccupied(false);
+        display.displaySlotStatus(i, false);
         break;
       
       default:

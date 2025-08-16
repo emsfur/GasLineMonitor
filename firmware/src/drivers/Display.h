@@ -2,6 +2,11 @@
 
 #include <TFT_eSPI.h>
 
+struct DisplayCoords {
+    int x;
+    int y;
+};
+
 /**
  * @brief Display helper to manage occupancy state visulizations.
  * 
@@ -13,15 +18,14 @@ class Display {
          * @brief Initializes the display hardware and wipes screen.
          * Call during setup()
          */
-        void init();
+        void init(int NUM_SONARS);
 
         /**
-         * @brief Fill the display to indicate occupied or available.
+         * @brief Push a red/green icon to the target slot to indicate occupied or available.
+         * @param slot index value of sensor correlating to a slot on the display
          * @param occupied true = occupied (red), false = available (green)
-         * 
-         * @note Current implementation repaints entire screen, overwriting input from other sensors.
          */
-        void markOccupied(bool occupied);
+        void displaySlotStatus(int slot, bool occupied);
     private:
         TFT_eSPI tft;
 };

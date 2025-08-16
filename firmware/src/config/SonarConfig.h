@@ -11,7 +11,8 @@ struct SonarPins {
 
 // Configure trig and echo pins for each sonar sensor
 constexpr SonarPins sonarPins[] = {
-    {2, 32}
+    {2, 32},
+    {15, 33}
 };
 
 
