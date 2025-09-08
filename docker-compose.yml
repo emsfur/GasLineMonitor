@@ -1,0 +1,34 @@
+services:
+  mqtt_prod:
+    build: ./broker
+    container_name: mqtt_prod
+    restart: no                     # prevents automatic restarts
+    ports:
+      - "1883:1883"
+    volumes:
+      - mqtt_data_prod:/mosquitto/data
+      - mqtt_log_prod:/mosquitto/log
+    networks:
+      - mqtt_net
+
+  webapp_prod:
+    build: ./webapp
+    container_name: webapp_prod
+    restart: no                     # prevents automatic restarts
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./webapp/.env
+    depends_on:
+      - mqtt_prod
+    networks:
+      - mqtt_net
+
+volumes:
+  mqtt_data_prod:
+  mqtt_log_prod:
+
+networks:
+  # both containers on the same Docker network for simpler prototype deployment (webapp can target mqtt_prod as IP)
+  mqtt_net:
+    driver: bridge

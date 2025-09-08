@@ -12,8 +12,8 @@
     #define PROGMEM
 #endif
 
-constexpr unsigned int ICON_WIDTH = 64;
-constexpr unsigned int ICON_HEIGHT = 64;
+constexpr unsigned int FUEL_ICON_WIDTH = 64;
+constexpr unsigned int FUEL_ICON_HEIGHT = 64;
 
 const unsigned short fuel_red[4096] PROGMEM={
 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xF800, 0xF800, 0xF800, 0xF800, 0xF800, 0xF800, 0xF800, 0xF800,   // 0x0010 (16) pixels

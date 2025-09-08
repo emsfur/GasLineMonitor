@@ -2,7 +2,7 @@
 
 #include <NewPing.h>
 
-#include "config/SonarConfig.h" // allows the direct use of max distance
+#include "config/SonarConfig.h" // Allows the direct use of max distance
 
 /**
  * @brief Events emitted by SonarSensor::poll() to indicate confirmed state changes.
@@ -14,7 +14,9 @@ enum class SensorEvent {
 };
 
 /**
- * @brief Wrapper around NewPing to simplify polling occupied/available events
+ * @brief Abstraction over NewPing for occupancy detection.
+ * 
+ * Provides a polling API to simplify occupied/available events
  */
 class SonarSensor {
     public:
