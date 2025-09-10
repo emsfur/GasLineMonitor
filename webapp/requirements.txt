@@ -1,3 +1,6 @@
 Flask
 paho-mqtt
 python-dotenv
+pandas
+plotly
+pytz
